@@ -59,7 +59,6 @@ private:
      * Create menu panel
      */
     void create_menu_panel();
-
     /**
      * Follow to the specified camera pose
      * @param gl_cam_pose_wc

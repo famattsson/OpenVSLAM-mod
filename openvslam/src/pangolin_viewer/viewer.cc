@@ -4,7 +4,6 @@
 #include "openvslam/system.h"
 #include "openvslam/data/keyframe.h"
 #include "openvslam/data/landmark.h"
-#include <string>
 #include "openvslam/publish/frame_publisher.h"
 #include "openvslam/publish/map_publisher.h"
 
@@ -136,17 +135,15 @@ void viewer::create_menu_panel() {
     menu_terminate_ = std::unique_ptr<pangolin::Var<bool>>(new pangolin::Var<bool>("menu.Terminate", false, false));
     menu_frm_size_ = std::unique_ptr<pangolin::Var<float>>(new pangolin::Var<float>("menu.Frame Size", 1.0, 1e-1, 1e1, true));
     menu_lm_size_ = std::unique_ptr<pangolin::Var<float>>(new pangolin::Var<float>("menu.Landmark Size", 1.0, 1e-1, 1e1, true));
-	if (!mapping_mode_)
-	{
-		std::vector<openvslam::data::landmark*> landmarks;
-		std::set<openvslam::data::landmark*> local_landmarks;
+    if (!mapping_mode_) {
+        std::vector<openvslam::data::landmark*> landmarks;
+        std::set<openvslam::data::landmark*> local_landmarks;
 
-		map_publisher_->get_landmarks(landmarks, local_landmarks);
+        map_publisher_->get_landmarks(landmarks, local_landmarks);
 
-		std::cout << landmarks.size() << std::endl;
-		std::cout << landmarks.front()->get_observed_ratio() << std::endl;
-		
-	}
+        std::cout << landmarks.size() << std::endl;
+        std::cout << landmarks.front()->get_observed_ratio() << std::endl;
+    }
 }
 
 void viewer::follow_camera(const pangolin::OpenGlMatrix& gl_cam_pose_wc) {
@@ -285,6 +282,7 @@ void viewer::draw_keyframes() {
     }
 }
 
+
 void viewer::draw_landmarks() {
     if (!*menu_show_lms_) {
         return;
@@ -300,14 +298,12 @@ void viewer::draw_landmarks() {
     }
 
     glPointSize(point_size_ * *menu_lm_size_);
-
-	glBegin(GL_POINTS);
+    glBegin(GL_POINTS);
 
     for (const auto lm : landmarks) {
-		auto obsrat = lm->get_observed_ratio();
-		GLfloat const color[3] = {1-obsrat,1-obsrat,1-obsrat};
-		glColor3fv(color);
-
+        auto obsrat = lm->get_observed_ratio();
+        GLfloat const color[3] = {1 - obsrat, 1 - obsrat, 1 - obsrat};
+        glColor3fv(color);
         if (!lm || lm->will_be_erased()) {
             continue;
         }
@@ -318,7 +314,6 @@ void viewer::draw_landmarks() {
         glVertex3fv(pos_w.cast<float>().eval().data());
     }
 
-	
     glEnd();
 
     if (!*menu_show_local_map_) {
@@ -326,14 +321,12 @@ void viewer::draw_landmarks() {
     }
 
     glPointSize(point_size_ * *menu_lm_size_);
-
-
     glBegin(GL_POINTS);
 
     for (const auto local_lm : local_landmarks) {
-		auto obsrat = local_lm->get_observed_ratio();
-		GLfloat const color[3] = { 1 - obsrat, obsrat, 0 };
-		glColor3fv(color);
+        auto obsrat = local_lm->get_observed_ratio();
+        GLfloat const color[3] = {1 - obsrat, obsrat, 0};
+        glColor3fv(color);
         if (local_lm->will_be_erased()) {
             continue;
         }
